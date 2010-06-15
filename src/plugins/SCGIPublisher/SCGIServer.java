@@ -14,20 +14,21 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Vector;
 
+import plugins.SCGIPublisher.server.AbstractServer;
+import plugins.SCGIPublisher.server.AbstractService;
 import freenet.client.FetchException;
 import freenet.client.FetchResult;
 import freenet.client.HighLevelSimpleClient;
-import freenet.clients.http.filter.ContentFilter;
-import freenet.clients.http.filter.UnsafeContentTypeException;
-import freenet.clients.http.filter.ContentFilter.FilterOutput;
+import freenet.client.filter.ContentFilter;
+import freenet.client.filter.UnsafeContentTypeException;
+import freenet.client.filter.ContentFilter.FilterStatus;
 import freenet.keys.FreenetURI;
 import freenet.support.Executor;
 import freenet.support.Logger;
+import freenet.support.api.Bucket;
 import freenet.support.api.BucketFactory;
+import freenet.support.io.Closer;
 import freenet.support.io.FileUtil;
-
-import plugins.SCGIPublisher.server.AbstractServer;
-import plugins.SCGIPublisher.server.AbstractService;
 
 /**
  * @author saces
@@ -228,10 +229,11 @@ public class SCGIServer extends AbstractServer implements AbstractService {
 			return;
 		}
 
-		FilterOutput fo;
+		FilterStatus fs;
+		Bucket fOut = bucketFactory.makeBucket(-1);
 		try {
 			ReadFilterCallback rfc = new ReadFilterCallback(baseURI, null, getServerPath(env));
-			fo = ContentFilter.filter(fr.asBucket(), bucketFactory, fr.getMimeType(), null, rfc);
+			fs = ContentFilter.filter(fr.asBucket().getInputStream(), fOut.getOutputStream(), fr.getMimeType(), null, rfc);
 		} catch (UnsafeContentTypeException e) {
 			if (logDEBUG) Logger.debug(this, "Error: "+e.getLocalizedMessage(), e);
 			StringBuilder buf = new StringBuilder(1024);
@@ -248,6 +250,7 @@ public class SCGIServer extends AbstractServer implements AbstractService {
 			buf.append("\r\n");
 			out.write(buf.toString().getBytes("US-ASCII"));
 			FileUtil.copy(fr.asBucket().getInputStream(), out, -1);
+			Closer.close(fOut);
 			return;
 		}
 
@@ -255,11 +258,12 @@ public class SCGIServer extends AbstractServer implements AbstractService {
 		buf.append("Status: 200 OK");
 		buf.append("\r\n");
 		buf.append("Content-Type: ");
-		buf.append(fo.type);
+		buf.append(fs.mimeType);
 		buf.append("\r\n");
 		buf.append("\r\n");
 		out.write(buf.toString().getBytes("US-ASCII"));
-		FileUtil.copy(fo.data.getInputStream(), out, -1);
+		FileUtil.copy(fOut.getInputStream(), out, -1);
+		Closer.close(fOut);
 	}
 
 	private String getServerPath(HashMap<String, String> env) {

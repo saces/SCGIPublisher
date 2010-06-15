@@ -9,16 +9,16 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
+
+import freenet.client.filter.CommentException;
+import freenet.client.filter.FilterCallback;
+import freenet.client.filter.FoundURICallback;
+import freenet.client.filter.GenericReadFilterCallback;
+import freenet.client.filter.HTMLFilter;
+import freenet.client.filter.HTMLFilter.ParsedTag;
 import freenet.clients.http.HTTPRequestImpl;
-import freenet.clients.http.StaticToadlet;
-import freenet.clients.http.filter.CommentException;
-import freenet.clients.http.filter.FilterCallback;
-import freenet.clients.http.filter.FoundURICallback;
-import freenet.clients.http.filter.GenericReadFilterCallback;
-import freenet.clients.http.filter.HTMLFilter;
 import freenet.keys.FreenetURI;
 import freenet.l10n.NodeL10n;
-import freenet.support.HTMLEncoder;
 import freenet.support.Logger;
 import freenet.support.URIPreEncoder;
 import freenet.support.URLDecoder;
@@ -384,6 +384,10 @@ public class ReadFilterCallback implements FilterCallback {
 			return null; // no irregular form sending methods
 		// does form makes sense here?
 		// maybe a form to fetch uris with parameters?
+		return null;
+	}
+
+	public String processTag(ParsedTag pt) {
 		return null;
 	}
 	
