@@ -1,4 +1,4 @@
-package plugins.SCGIPublisher;
+package de.saces.fnplugins.SCGIPublisher;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;

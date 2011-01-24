@@ -1,7 +1,7 @@
 /* This code is part of Freenet. It is distributed under the GNU General
  * Public License, version 2 (or at your option any later version). See
  * http://www.gnu.org/ for further details of the GPL. */
-package plugins.SCGIPublisher;
+package de.saces.fnplugins.SCGIPublisher;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -14,8 +14,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Vector;
 
-import plugins.SCGIPublisher.server.AbstractServer;
-import plugins.SCGIPublisher.server.AbstractService;
+import de.saces.fnplugins.SCGIPublisher.server.AbstractServer;
+import de.saces.fnplugins.SCGIPublisher.server.AbstractService;
+
 import freenet.client.FetchException;
 import freenet.client.FetchResult;
 import freenet.client.HighLevelSimpleClient;

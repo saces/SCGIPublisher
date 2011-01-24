@@ -1,12 +1,13 @@
-package plugins.SCGIPublisher;
+package de.saces.fnplugins.SCGIPublisher;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Vector;
 
-import plugins.SCGIPublisher.iniparser.IniParserException;
-import plugins.SCGIPublisher.iniparser.SimpleIniParser;
+import de.saces.fnplugins.SCGIPublisher.iniparser.IniParserException;
+import de.saces.fnplugins.SCGIPublisher.iniparser.SimpleIniParser;
+
 
 import freenet.keys.FreenetURI;
 import freenet.l10n.BaseL10n.LANGUAGE;
