@@ -10,15 +10,23 @@ package de.saces.fnplugins.SCGIPublisher;
 public class Version {
 
 	/** SVN revision number. Only set if the plugin is compiled properly e.g. by emu. */
-	public static final String gitRevision = "@custom@";
+	private static final String gitRevision = "@custom@";
 
 	/** Version number of the plugin for getRealVersion(). Increment this on making
 	 * a major change, a significant bugfix etc. These numbers are used in auto-update 
 	 * etc, at a minimum any build inserted into auto-update should have a unique 
 	 * version.
 	 */
-	public static final long version = 1;
+	private static final long version = 1;
 
-	public static final String longVersionString = "0.0.1 " + gitRevision;
+	private static final String longVersionString = "0.0.1 " + gitRevision;
+
+	public static long getRealVersion() {
+		return version;
+	}
+
+	public static String getLongVersionString() {
+		return longVersionString;
+	}
 
 }

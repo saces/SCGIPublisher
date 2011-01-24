@@ -73,11 +73,11 @@ public class SCGIPublisher implements FredPlugin, FredPluginL10n, FredPluginThre
 	}
 
 	public String getVersion() {
-		return Version.longVersionString;
+		return Version.getLongVersionString();
 	}
 
 	public long getRealVersion() {
-		return Version.version;
+		return Version.getRealVersion();
 	}
 
 	private void maybeLoadConfigAndStartServers() {
