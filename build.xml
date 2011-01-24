@@ -12,8 +12,8 @@
 	<property name="dist" location="dist/"/>
 	<property name="src" location="src/"/>
 	<property name="junit.location" value="/usr/share/java/junit.jar"/>
-	<property name="version.src" value="plugins/SCGIPublisher/Version.java" />
-	<property name="version.build" value="plugins/SCGIPublisher/Version.class" />
+	<property name="version.src" value="de/saces/fnplugins/SCGIPublisher/Version.java" />
+	<property name="version.build" value="de/saces/fnplugins/SCGIPublisher/Version.class" />
 
 	<available file="src/plugins/SCGIPublisher/Version.java" property="version.present"/>
 	<available file="${junit.location}" property="junit.present"/>
@@ -120,7 +120,7 @@
 		description="generate the distribution" >
 		<jar jarfile="${dist}/SCGIPublisher.jar" duplicate="fail">
 			<manifest>
-				<attribute name="Plugin-Main-Class" value="plugins.SCGIPublisher.SCGIPublisher"/>
+				<attribute name="Plugin-Main-Class" value="de.saces.fnplugins.SCGIPublisher.SCGIPublisher"/>
 			</manifest>
 			<fileset dir="src/" casesensitive="no">
 				<include name="*.txt"/>
