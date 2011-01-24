@@ -17,6 +17,13 @@ import freenet.support.io.Closer;
 
 public abstract class AbstractServer implements Runnable {
 
+	private static volatile boolean logMINOR;
+	private static volatile boolean logDEBUG;
+
+	static {
+		Logger.registerClass(AbstractServer.class);
+	}
+
 	boolean isRunning;
 	private String mAllowedHosts;
 	private String mHost;
@@ -36,7 +43,6 @@ public abstract class AbstractServer implements Runnable {
 
 		public void run() {
 			freenet.support.Logger.OSThread.logPID(this);
-			boolean logMINOR = Logger.shouldLog(Logger.MINOR, this);
 			if(logMINOR) Logger.minor(this, "Handling connection");
 			try {
 				getService().handle(sock);
@@ -89,7 +95,7 @@ public abstract class AbstractServer implements Runnable {
 				return;
 			if(conn == null)
 				continue; // timeout
-			if(Logger.shouldLog(Logger.MINOR, this))
+			if(logMINOR)
 				Logger.minor(this, "Accepted connection");
 			SocketHandler sh = new SocketHandler(conn);
 			eXecutor.execute(sh, serverName+" socket handler@"+hashCode());
