@@ -9,19 +9,27 @@ import de.saces.fnplugins.SCGIPublisher.iniparser.IniParserException;
 import de.saces.fnplugins.SCGIPublisher.iniparser.SimpleIniParser;
 
 
+import freenet.config.InvalidConfigValueException;
+import freenet.config.NodeNeedRestartException;
+import freenet.config.SubConfig;
 import freenet.keys.FreenetURI;
 import freenet.l10n.BaseL10n.LANGUAGE;
+import freenet.l10n.PluginL10n;
 import freenet.pluginmanager.FredPlugin;
+import freenet.pluginmanager.FredPluginBaseL10n;
+import freenet.pluginmanager.FredPluginConfigurable;
 import freenet.pluginmanager.FredPluginL10n;
 import freenet.pluginmanager.FredPluginRealVersioned;
 import freenet.pluginmanager.FredPluginThreadless;
 import freenet.pluginmanager.FredPluginVersioned;
 import freenet.pluginmanager.PluginRespirator;
 import freenet.support.Logger;
+import freenet.support.api.BooleanCallback;
+import freenet.support.api.StringCallback;
 import freenet.support.plugins.helpers1.PluginContext;
 import freenet.support.plugins.helpers1.WebInterface;
 
-public class SCGIPublisher implements FredPlugin, FredPluginL10n, FredPluginThreadless, FredPluginVersioned, FredPluginRealVersioned {
+public class SCGIPublisher implements FredPlugin, FredPluginL10n, FredPluginThreadless, FredPluginVersioned, FredPluginRealVersioned, FredPluginConfigurable, FredPluginBaseL10n {
 
 	private static volatile boolean logMINOR;
 	private static volatile boolean logDEBUG;
@@ -35,14 +43,83 @@ public class SCGIPublisher implements FredPlugin, FredPluginL10n, FredPluginThre
 	public static final String DEFAULT_CONFIGNAME = "SCGIPublisher.ini";
 	public static final String CONFIG_SERVERPREFIX = "Server_";
 	public static final String CONFIG_KEYSETPREFIX = "Keyset_";
-	
 
 	private WebInterface webInterface;
 	private PluginContext pluginContext;
+	private PluginL10n intl;
 
 	private Vector<SCGIServer> servers;
 
+	private String configFileName;
+	private boolean allowConfigFproxy;
+	private boolean allowConfigFCP;
+
+	class ConfigFileNameOption extends StringCallback {
+		@Override
+		public String get() {
+			return configFileName;
+		}
+
+		@Override
+		public void set(String val) throws InvalidConfigValueException,
+				NodeNeedRestartException {
+			if (!val.equals(get())) {
+				configFileName = val;
+			}
+		}
+	}
+
+	class AllowConfigFProxyOption extends BooleanCallback {
+		@Override
+		public Boolean get() {
+			return allowConfigFproxy;
+		}
+
+		@Override
+		public void set(Boolean val) throws InvalidConfigValueException,
+				NodeNeedRestartException {
+			if (!val.equals(get())) {
+				allowConfigFproxy = val;
+			}
+		}
+
+		@Override
+		public boolean isReadOnly() {
+			return true;
+		}
+	}
+
+	class AllowConfigFCPOption extends BooleanCallback {
+		@Override
+		public Boolean get() {
+			return allowConfigFCP;
+		}
+
+		@Override
+		public void set(Boolean val) throws InvalidConfigValueException,
+				NodeNeedRestartException {
+			if (!val.equals(get())) {
+				allowConfigFCP = val;
+			}
+		}
+
+		@Override
+		public boolean isReadOnly() {
+			return true;
+		}
+	}
+
+	public void setupConfig(SubConfig subconfig) {
+		short sortOrder = 0;
+		subconfig.register("configFileName", DEFAULT_CONFIGNAME, sortOrder, true, true, "Config.Filename", "Config.FilenameLong", new ConfigFileNameOption());
+		subconfig.register("allowFProxyConfig", true, sortOrder++, true, false, "Config.AllowFProxy", "Config.AllowFProxyLong", new AllowConfigFProxyOption());
+		subconfig.register("allowFCPConfig", false, sortOrder++, true, false, "Config.AllowFCP", "Config.AllowFCPLong", new AllowConfigFCPOption());
+	}
+
 	public void runPlugin(PluginRespirator pr) {
+		if (intl == null) {
+			intl = new PluginL10n(this);
+		}
 		pluginContext = new PluginContext(pr);
 		webInterface = new WebInterface(pluginContext);
 		servers = new Vector<SCGIServer>();
@@ -65,11 +142,16 @@ public class SCGIPublisher implements FredPlugin, FredPluginL10n, FredPluginThre
 	}
 
 	public String getString(String key) {
-		return key;
+		String s = intl.getBase().getString(key, true);
+		return s != null ? s : key;
 	}
 
 	public void setLanguage(LANGUAGE newLanguage) {
-		// TODO Auto-generated method stub
+		if (intl == null) {
+			intl = new PluginL10n(this, newLanguage);
+			return;
+		}
+		intl.getBase().setLanguage(newLanguage);
 	}
 
 	public String getVersion() {
@@ -151,6 +233,22 @@ public class SCGIPublisher implements FredPlugin, FredPluginL10n, FredPluginThre
 		}
 		if (!error && conf.getValueAsBoolean(section, "enabled", false))
 			server.start();
+	}
+
+	public String getL10nFilesBasePath() {
+		return "de/saces/fnplugins/SCGIPublisher/intl/";
+	}
+
+	public String getL10nFilesMask() {
+		return "${lang}.txt";
+	}
+
+	public String getL10nOverrideFilesMask() {
+		return "SCGIPublisher.${lang}.override.txt";
+	}
+
+	public ClassLoader getPluginClassLoader() {
+		return this.getClass().getClassLoader();
 	}
 
 }

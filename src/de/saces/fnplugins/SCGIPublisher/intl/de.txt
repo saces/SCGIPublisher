@@ -1,0 +1,10 @@
+Config.AllowFCP=FCP Konfiguration
+Config.AllowFCPLong=Konfiguration via FCP erlauben?
+Config.AllowFProxy=FProxy Konfiguration
+Config.AllowFProxyLong=Konfiguration via FProxy (Webinterface) erlauben?
+Config.Filename=Dateiname
+Config.FilenameLong=Dateiname, wo der SCGIPublisher die Serverkonfiguration hinspeichern tut.
+ConfigToadlet.de.saces.fnplugins.SCGIPublisher.SCGIPublisher.label=SCGIPublisher
+ConfigToadlet.de.saces.fnplugins.SCGIPublisher.SCGIPublisher.tooltip=Grundeinstellungen für SCGIPublisher
+de.saces.fnplugins.SCGIPublisher.SCGIPublisher=SCGIPublisher - Grundeinstellungen
+End
