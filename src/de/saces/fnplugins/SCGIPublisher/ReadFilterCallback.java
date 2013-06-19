@@ -369,6 +369,10 @@ public class ReadFilterCallback implements FilterCallback {
 			cb.onText(s, type, baseURI);
 	}
 
+    @Override
+    public void onFinished() {
+    }
+
 	/**
 	 * Process a form.
 	 * Current strategy:
