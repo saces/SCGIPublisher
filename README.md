@@ -29,7 +29,8 @@
     allowedHosts=127.0.0.1
     keysets=saces,gpl,toadflog
     enabled=true
-    serverpath=http://localhost/freenet
+    serverpath=http://localhost/freenet/
+    ; with a slash: this makes links on the gateway site work.
     ; replace localhost with the server you want to use, for example your dyndns host
     
     [Keyset_gpl]  
