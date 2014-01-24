@@ -29,9 +29,9 @@
     allowedHosts=127.0.0.1
     keysets=saces,gpl,toadflog
     enabled=true
-    serverpath=http://localhost/freenet/
-    ; with a slash: this makes links on the gateway site work.
-    ; replace localhost with the server you want to use, for example your dyndns host
+    serverpath=http://localhost/freenet
+    ; without a slash, otherwise every link will get an additional / prepended and you get URLs like http://localhost/freenet//USK@...
+    ; replace localhost with the server you want to use, for example your dyndns host. SCGIPublisher will use this to rewrite freenet-links.
     
     [Keyset_gpl]  
     strict=KSK@gpl.txt
@@ -79,7 +79,7 @@
     
     #### scgi module
     ## read scgi.txt for more info
-    ## Put NO SLASH at the end of /freenet, otherwise it breaks.
+    ## Put NO SLASH at the end of /freenet, otherwise the SCGIPublisher gateway throws the error "no @ in this key"
         scgi.server = ( "/freenet" =>
           ( "localhost" =>
            ( "host" => "127.0.0.1",
@@ -96,6 +96,11 @@
 
 - To to http://127.0.0.1:8888/config/de.saces.fnplugins.SCGIPublisher.SCGIPublisher?fproxyAdvancedMode=2
 - Hit apply.
-- Restart Freenet. I had to do that to make it work!
+- Restart the plugin. If that does not suffice, restart Freenet. I had to do that to make it work!
+- Whenever you change the SCGIPublisher.ini, you have to reload the SCGIPublisher plugin.  
+  To do so, go to http://127.0.0.1:8888/plugins/ and click the "reload" button of the line showing the SCGIPublisher plugin.
 
 Now I can access the allowed freesites via http://localhost/freenet/[key]
+
+Links within freenet will automatically point to http://localhost/freenet/[link] - if you set a hostname in the serverpath for SCGIPublisher.ini, the links will go to the hostname 
+instead.
