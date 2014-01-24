@@ -13,7 +13,7 @@
 - Add the plugin path which ant gives you at the end as unofficial plugin on  
   <http://127.0.0.1:8888/plugins/>
 
-- adjust (your freenet dir)/SCGIPublisher.ini  
-  see <http://127.0.0.1:8888/config/de.saces.fnplugins.SCGIPublisher.SCGIPublisher?fproxyAdvancedMode=2>
+- adjust SCGIPublisher.ini. Copy it to (your freenet dir)/SCGIPublisher.ini  
+  also see <http://127.0.0.1:8888/config/de.saces.fnplugins.SCGIPublisher.SCGIPublisher?fproxyAdvancedMode=2>
 
 - TODO: How to get it to work on a webserver.
