@@ -1,4 +1,6 @@
-# Make freenet sites accessible in the general web via a whitelist.
+# Freenet SCGI Publisher
+
+*Make freenet sites accessible in the general web via a whitelist.*
 
 ## How to build
 
