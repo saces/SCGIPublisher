@@ -4,7 +4,8 @@
 
 ## How to build
 
-- Adjust the paths to freenet.jar and freenet-ext.jar in build.xml
+- Adjust the paths to freenet.jar and freenet-ext.jar in build.xml  
+  just use the ones in your freenet install folder
 - run ant
 
 ## how to use
