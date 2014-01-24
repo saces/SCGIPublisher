@@ -351,8 +351,11 @@ public class SCGIServer extends AbstractServer implements AbstractService {
 			}
 			if (filter instanceof BeginFilter) {
 				body.append("<li>URIs that begins with ");
+				body.append("<a href=\"");
 				body.append(((BeginFilter) filter).beginURI.toString(false, false));
-				body.append("</li>");
+				body.append("\">");
+				body.append(((BeginFilter) filter).beginURI.toString(false, false));
+				body.append("</a></li>");
 			}
 			if (filter instanceof DerivedFilter) {
 				body.append("<li>URIs thats derived from ");
