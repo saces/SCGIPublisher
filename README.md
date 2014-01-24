@@ -21,6 +21,11 @@
 
 ## lighttpd setup which worked for me
 
+This setup worked well on a small Gentoo GNU Linux box with port 80 forwarded to the box in my NAT.
+
+I used lighttpd, because I just had an issue with Apache asking for PHP without threads on my Gentoo box and I did not want to resolve that right now. So the choice of lighttpd is 
+mostly random. It's just the first thing which came after Apache.
+
 ### SCGIPublisher.ini
 
     [Server_test]
