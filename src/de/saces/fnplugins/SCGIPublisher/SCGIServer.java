@@ -350,7 +350,7 @@ public class SCGIServer extends AbstractServer implements AbstractService {
 				body.append("</a></li>");
 			}
 			if (filter instanceof BeginFilter) {
-				body.append("<li>URIs that begins with ");
+				body.append("<li>URIs that begin with ");
 				body.append("<a href=\"");
 				body.append(((BeginFilter) filter).beginURI.toString(false, false));
 				body.append("\">");
@@ -358,7 +358,7 @@ public class SCGIServer extends AbstractServer implements AbstractService {
 				body.append("</a></li>");
 			}
 			if (filter instanceof DerivedFilter) {
-				body.append("<li>URIs thats derived from ");
+				body.append("<li>URIs which are derived from ");
 				body.append(((DerivedFilter) filter).derivedURI.toString(false, false));
 				body.append("</li>");
 			}
