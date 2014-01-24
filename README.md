@@ -93,4 +93,8 @@
 
 ### Usage
 
+- To to http://127.0.0.1:8888/config/de.saces.fnplugins.SCGIPublisher.SCGIPublisher?fproxyAdvancedMode=2
+- Hit apply.
+- Restart Freenet. I had to do that to make it work!
+
 Now I can access the allowed freesites via http://localhost/freenet/[key]
