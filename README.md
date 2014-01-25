@@ -107,5 +107,6 @@ mostly random. It's just the first thing which came after Apache.
 
 Now I can access the allowed freesites via http://localhost/freenet/[key]
 
-Links within freenet will automatically point to http://localhost/freenet/[link] - if you set a hostname in the serverpath for SCGIPublisher.ini, the links will go to the hostname 
-instead.
+Links within freenet will automatically point to http://localhost/freenet/[link] - if you set a hostname in the serverpath for SCGIPublisher.ini, the links will go to the hostname instead.
+
+If you want to make your gateway more useful with little effort, you can reuse SCGIPublisher.ini.example. It already provides a whitelist of safe sites. Just be sure to replace d6.or.gs with your own domain.

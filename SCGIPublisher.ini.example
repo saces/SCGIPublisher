@@ -1,0 +1,172 @@
+;
+; Simple INI file format: text/plain;utf-8
+;
+; [SectionName]
+; item=value
+; ; comment
+; <empty line>
+;
+; SCGIPublisher configuration
+; [Server_<uniquename>]
+; enabled=true
+; bindTo=127.0.0.1
+; port=1234
+; allowedHosts=127.0.0.1
+; keysets=keyset1,keyset2
+; serverpath=http://www.server.de/path/to/scgi/mount
+;
+; Some limitations For the easyness of the parser:
+;  - each type is only allowed once per keyset
+;  - order of items/Keysets is not guaranteed, so do not overlap them.
+; Sorry, folks.
+;
+; 
+[Keyset_<uniquename>]
+; ; requested uri must equals FreenetURI
+; strict=FreenetURI
+; ; requested uri must begin with FreenetURI
+; begin=FreenetURI
+; ; requested uri must be a derivate from FreenetURI
+; derived=FreenetURI
+;
+;
+; SCGIPublisher sample configuration
+[Server_test]
+bindTo=127.0.0.1
+port=1400
+allowedHosts=127.0.0.1
+keysets=nerd,xkcd,social,feral,toadflog,fetchpull,tech,death,denissalem,scheme,dragonwisdom,file,flip,fmsguide,fnfs,freemail,freesite,freesitehowto,gpl,heal,hgvsgit,irc,kitchen,kubuntu,publish,stats,saces,bombe,sone,xor,jsite,bloc
+; gpl,toadflog,nerd,fetchpull,stats,tech,jsite,dragonwisdom,publish,freesitehowto,denissalem,bloc,death,irc,heal,file,kubuntu,social,freesite,scheme,flip,freemail,hgvsgit,fnfs,xkcd,kitchen,fmsguide,feral,saces,bombe,sone,xor
+enabled=true
+serverpath=http://d6.or.gs/freenet
+; serverpath=http://d6.or.gs/freenet
+
+
+[Keyset_gpl]
+strict=KSK@gpl.txt
+
+[Keyset_toadflog]
+; edition numbers are ignored
+begin=USK@yGvITGZzrY1vUZK-4AaYLgcjZ7ysRqNTMfdcO8gS-LY,-ab5bJVD3Lp-LXEQqBAhJpMKrKJ19RnNaZMIkusU79s,AQACAAE/toad/19/
+
+[Keyset_saces]
+; any [S|U]SK with this routing and crypto key
+derived=SSK@MYLAnId-ZEyXhDGGbYOa1gOtkZZrFNTXjFl1dibLj9E,Xpu27DoAKKc8b0718E-ZteFrGqCYROe7XBBJI57pB4M,AQACAAE/
+
+[Keyset_bombe]
+; key of bombe. He is responsible.
+derived=SSK@e3myoFyp5avg6WYN16ImHri6J7Nj8980Fm~aQe4EX1U,QvbWT0ImE0TwLODTl7EoJx2NBnwDxTbLTE6zkB-eGPs,AQACAAE/
+
+[Keyset_sone]
+; key of bombe. He is responsible.
+derived=SSK@nwa8lHa271k2QvJ8aa0Ov7IHAV-DFOCFgmDt3X6BpCI,DuQSUZiI~agF8c-6tjsFFGuZ8eICrzWCILB60nT8KKo,AQACAAE/
+
+[Keyset_xor]
+; well known.
+derived=SSK@QeTBVWTwBldfI-lrF~xf0nqFVDdQoSUghT~PvhyJ1NE,OjEywGD063La2H-IihD7iYtZm3rC0BP6UTvvwyF5Zh4,AQACAAE/
+
+
+[Keyset_nerd]
+; edition numbers are ignored. This is nerdageddon. Linkageddon without the illegal.
+begin=USK@tiYrPDh~fDeH5V7NZjpp~QuubaHwgks88iwlRXXLLWA,yboLMwX1dChz8fWKjmbdtl38HR5uiCOdIUT86ohUyRg,AQACAAE/nerdageddon/137/
+
+[Keyset_stats]
+; Identity known
+derived=SSK@pxtehd-TmfJwyNUAW2Clk4pwv7Nshyg21NNfXcqzFv4,LTjcTWqvsq3ju6pMGe9Cqb3scvQgECG81hRdgj5WO4s,AQACAAE/statistics/393/
+
+[Keyset_jsite]
+; Identity known
+derived=SSK@e3myoFyp5avg6WYN16ImHri6J7Nj8980Fm~aQe4EX1U,QvbWT0ImE0TwLODTl7EoJx2NBnwDxTbLTE6zkB-eGPs,AQACAAE/jSite/20/
+
+
+[Keyset_fetchpull]
+; Identity known, but only one site
+begin=USK@sCzfyxndzgtfzoPRUQExz4Y6wNmLDzOpW04umOoIBAk,~X5tIffdcfNWPIKZ2tHgSGPqIk9au31oJ301qB8kTSw,AQACAAE/fetchpull/1047/
+
+[Keyset_tech]
+; Identity known, but only one site on the key
+begin=USK@6~ZDYdvAgMoUfG6M5Kwi7SQqyS-gTcyFeaNN1Pf3FvY,OSOT4OEeg4xyYnwcGECZUX6~lnmYrZsz05Km7G7bvOQ,AQACAAE/Technophob/117/
+
+[Keyset_dragonwisdom]
+; looks harmless
+begin=USK@Gc-IjhvVuOmx686nbBoKqwfkbm6qptkmzCl3h6i~yG8,jZBSGP67XO7zHJ4Rd3cPGcwCkJb42S55ZMwGRmIpGGU,AQACAAE/flog/2/
+
+[Keyset_freesitehowto]
+; long time good site
+begin=USK@8r-uSRcJPkAr-3v3YJR16OCx~lyV2XOKsiG4MOQQBMM,P42IgNemestUdaI7T6z3Og6P-Hi7g9U~e37R3kWGVj8,AQACAAE/freesite-HOWTO/4/
+
+[Keyset_publish]
+; long time good site
+begin=USK@940RYvj1-aowEHGsb5HeMTigq8gnV14pbKNsIvUO~-0,FdTbR3gIz21QNfDtnK~MiWgAf2kfwHe-cpyJXuLHdOE,AQACAAE/publish/3/
+
+[Keyset_denissalem]
+; long time good site
+begin=USK@oZ89lerr95jMR3691beV6YaB0NHufZSZn~yK80tTSvg,~WHO0gaREIvBFlmST71EefrMH~i1POH9GoHAc1heKds,AQACAAE/denissalem/68/
+
+[Keyset_bloc]
+; long time good site
+derived=SSK@pT4aZRngVeuvE77aetTnGopC3QNuesLl8ielr22VE6Q,VnVS7QscZZLJnXBR2L-KsY7Va5KbaAJZB3DCmGNSLE0,AQACAAE/
+
+[Keyset_death]
+; long time good site
+begin=USK@U2Ae~8MLcFw39u9CSzjm6HwO8NNsufS~Kb5pJOmsI2Y,KtlCou7~kS6hmkA2hLHbRt1Q-6~T4aPvt0~yPRwUcu8,AQACAAE/EscapeToDeath/2/
+
+[Keyset_irc]
+; long time good site
+begin=USK@Dtz9FjDPmOxiT54Wjt7JwMJKWaqSOS-UGw4miINEvtg,cuIx2THw7G7cVyh9PuvNiHa1e9BvNmmfTcbQ7llXh2Q,AQACAAE/irclogs/907/
+
+[Keyset_heal]
+; long time good site
+begin=USK@6aw1sH2-supBdk8cavY2AMgbsGgUmAhYtUG01~zCNFM,7Yc5WgTFUgxqCmqScITAJzwQ-~gSymZWztJbBiqJF5o,AQACAAE/Healing_keys/10/
+
+[Keyset_file]
+; long time good site
+begin=USK@nIrigH9QC81q06E5pVTZU4lM5yOydJwES9Wx0XOr74Q,cC7Dzr8WhMvib~fyoGLEB3TB1J7ZpYr--konuWPSrkg,AQACAAE/site/2/
+
+[Keyset_kubuntu]
+; long time good site
+begin=USK@UT4EmZ6bO3fGkBP3w~~LnAUpYkTYXQH-Yitn5mLnG5g,o-glt8o8rf6BE8qE1auyOcjl36vqfgEs788Suewf7mw,AQACAAE/Kubuntu/1/
+
+[Keyset_social]
+; long time good site
+begin=USK@t5zaONbYd5DvGNNSokVnDCdrIEytn9U5SSD~pYF0RTE,guWyS9aCMcywU5PFBrKsMiXs7LzwKfQlGSRi17fpffc,AQACAAE/fsng/58/
+
+[Keyset_freesite]
+; long time good site
+begin=USK@dwfBz-V4DM9b11m~qjRWg3ArbtxN3Zggv4DXuncYM24,JuuHMi3FI1lzfwTpHGuOSZy7E7BQPdkBnBSgWVfYHPE,AQACAAE/FreesiteBuilding/4/
+
+[Keyset_scheme]
+; long time good site
+begin=USK@9KTbJ4h23E7oevqdaNccE~x6Y6NigKA3cRKsuCeX9dA,AAE86L5koodt3SOT0IcnSlqF5ZVf5D9rk9HbkPDJWco,AQACAAE/adventures-scheme/0/
+
+[Keyset_flip]
+; long time good site
+begin=USK@pGQPA-9PcFiE3A2tCuCjacK165UaX07AQYw98iDQrNA,8gwQ67ytBNR03hNj7JU~ceeew22HVq6G50dcEeMcgks,AQACAAE/flip/11/
+
+[Keyset_freemail]
+; long time good site
+begin=USK@M0d8y6YoLpXOeQGxu0-IDg8sE5Yt~Ky6t~GPyyZe~zo,KlqIjAj3~dA1Zf57VDljkmp3vHUozndpxnH-P2RRugI,AQACAAE/freemail/8/
+
+[Keyset_hgvsgit]
+; long time good site
+begin=USK@6~ZDYdvAgMoUfG6M5Kwi7SQqyS-gTcyFeaNN1Pf3FvY,OSOT4OEeg4xyYnwcGECZUX6~lnmYrZsz05Km7G7bvOQ,AQACAAE/hg-vs-git-server/4/
+
+[Keyset_fnfs]
+; long time good site
+begin=USK@j6KOi-EwwJkaRPLZfCXe8BoPTC3F2mETa1AlsiihtE0,J2FoEiZIlkMc7xhuTiiUDfG9OWyTK6vT7szAgun0nLo,AQACAAE/fnfs/5/
+
+[Keyset_xkcd]
+; long time good site
+begin=USK@DXNTwIka7DbpxAa1-TGIkAYE3E3W0BBzfYEm5IIvIOo,TAe7a-w~nR6GzGUs64onIJshzMPzLZuW4-qbD5Vc674,AQACAAE/xkcd/520/
+
+[Keyset_kitchen]
+; long time good site
+begin=USK@XJZAi25dd5y7lrxE3cHMmM-xZ-c-hlPpKLYeLC0YG5I,8XTbR1bd9RBXlX6j-OZNednsJ8Cl6EAeBBebC3jtMFU,AQACAAE/EssentialKitchen/2/
+
+[Keyset_fmsguide]
+; long time good site
+begin=USK@xedmmitRTj9-PXJxoPbD7RY1gf9pKi0OcsRmjNPPIU4,AzFWTYV~9-I~eXis14tIkJ4XkF17gIgZrB294LjFXjc,AQACAAE/fmsguide/6/
+
+[Keyset_feral]
+; long time good site
+begin=USK@-bk9znYylSCOEDuSWAvo5m72nUeMxKkDmH3nIqAeI-0,qfu5H3FZsZ-5rfNBY-jQHS5Ke7AT2PtJWd13IrPZjcg,AQACAAE/feral_codewright/28/
