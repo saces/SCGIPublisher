@@ -336,7 +336,7 @@ public class SCGIServer extends AbstractServer implements AbstractService {
 			body.append(errorText);
 			body.append("</p><p>");
 		}
-		body.append("This is a restricted proxy into Freenet. You can only request the URIs listed below. All the content you can access belongs only to its creators. We only take responsibility in so far that we ensured that no URI listed here contained any illegal material when we checked it. Should you find illegal on any site you can access via this proxy, please notify us instantly so we can remove the URI from our whitelist!");
+		body.append("This is a restricted gate into Freenet. You can only request the URIs listed below. All the content you can access belongs only to its creators. We only take responsibility in so far that we ensured that no URI listed here contained any illegal material when we checked it. Should you find illegal on any site you can access via this proxy, please notify us instantly so we can remove the URI from our whitelist!");
 		body.append("</p><p>");
 		body.append("To get access to all content, install <a href=\"http://freenetproject.org\">Freenet</a> and request the Freenet URIs on your own node without the limits here.");
 		body.append("</p><p>Allowed Freenet URIs (whitelist):<ul>");
