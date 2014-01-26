@@ -96,6 +96,21 @@ mostly random. It's just the first thing which came after Apache.
           )
         )
 
+#### SSL in lighttpd
+
+    mkdir -p /etc/lighttpd/certs
+    cd /etc/lighttpd/certs
+    openssl req -new -x509 -keyout lighttpd.pem -out lighttpd.pem -days 365 -nodes
+    chmod 400 lighttpd.pem
+
+/etc/lighttpd/lighttpd.conf
+
+    $SERVER["socket"] == ":443" {
+      ssl.engine = "enable" 
+      ssl.pemfile = "/etc/lighttpd/certs/lighttpd.pem" 
+    }
+
+
 
 ### Usage
 
