@@ -100,8 +100,12 @@ mostly random. It's just the first thing which came after Apache.
 
     mkdir -p /etc/lighttpd/certs
     cd /etc/lighttpd/certs
-    openssl req -new -x509 -keyout lighttpd.pem -out lighttpd.pem -days 365 -nodes
+    openssl req -new -x509 -keyout lighttpd.pem -out lighttpd.pem -days 365 -nodes -sha256
     chmod 400 lighttpd.pem
+
+Answer the questions there.
+
+Note: 'common name' (server FQ...) should be your server, for example 'd6.or.gs'
 
 /etc/lighttpd/lighttpd.conf
 
@@ -110,7 +114,7 @@ mostly random. It's just the first thing which came after Apache.
       ssl.pemfile = "/etc/lighttpd/certs/lighttpd.pem" 
     }
 
-
+Also change the serverpath in SCGIPublisher.ini to https://...
 
 ### Usage
 
