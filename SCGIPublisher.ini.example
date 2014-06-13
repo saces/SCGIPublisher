@@ -35,15 +35,23 @@
 bindTo=127.0.0.1
 port=1400
 allowedHosts=127.0.0.1
-keysets=nerd,xkcd,social,feral,toadflog,fetchpull,tech,death,denissalem,scheme,dragonwisdom,file,flip,fmsguide,fnfs,freemail,freesite,freesitehowto,gpl,heal,hgvsgit,irc,kitchen,kubuntu,publish,stats,saces,bombe,sone,xor,jsite,bloc
-; gpl,toadflog,nerd,fetchpull,stats,tech,jsite,dragonwisdom,publish,freesitehowto,denissalem,bloc,death,irc,heal,file,kubuntu,social,freesite,scheme,flip,freemail,hgvsgit,fnfs,xkcd,kitchen,fmsguide,feral,saces,bombe,sone,xor
+keysets=nerd,xkcd,social,heartbleed,feral,toadflog,fetchpull,tech,death,seeker,denissalem,scheme,dragonwisdom,drakrss,file,flip,fmsguide,fnfs,freemail,freesite,freesitehowto,gpl,heal,hgvsgit,irc,kubuntu,publish,stats,saces,bombe,sone,xor,jsite,bloc,freenetfunding1,freenetfunding2,freenetfunding3
 enabled=true
-serverpath=http://d6.or.gs/freenet
+serverpath=https://d6.or.gs/freenet
 ; serverpath=http://d6.or.gs/freenet
 
 
 [Keyset_gpl]
 strict=KSK@gpl.txt
+
+[Keyset_freenetfunding1]
+strict=CHK@BSlk9GPUCjylGSLrhMNqHtea3NBHl3IAOEgpM10iFEo,Oww8F~-MEInKwFGKzpgMaz~75d6S1XO-GTpJG2JJz0s,AAMC--8
+
+[Keyset_freenetfunding2]
+strict=CHK@AL-ein~cr5QgS2fFV-C3Aoq2y-Lfsi4TAzB9EvUgcgM,rMTvSXqQu70kcAlYqerQzgZ3Ketdw2KfSGmI-gc3IKM,AAMC--8
+
+[Keyset_freenetfunding3]
+strict=CHK@AL-ein~cr5QgS2fFV-C3Aoq2y-Lfsi4TAzB9EvUgcgM,rMTvSXqQu70kcAlYqerQzgZ3Ketdw2KfSGmI-gc3IKM,AAMC--8
 
 [Keyset_toadflog]
 ; edition numbers are ignored
@@ -159,10 +167,6 @@ begin=USK@j6KOi-EwwJkaRPLZfCXe8BoPTC3F2mETa1AlsiihtE0,J2FoEiZIlkMc7xhuTiiUDfG9OW
 ; long time good site
 begin=USK@DXNTwIka7DbpxAa1-TGIkAYE3E3W0BBzfYEm5IIvIOo,TAe7a-w~nR6GzGUs64onIJshzMPzLZuW4-qbD5Vc674,AQACAAE/xkcd/520/
 
-[Keyset_kitchen]
-; long time good site
-begin=USK@XJZAi25dd5y7lrxE3cHMmM-xZ-c-hlPpKLYeLC0YG5I,8XTbR1bd9RBXlX6j-OZNednsJ8Cl6EAeBBebC3jtMFU,AQACAAE/EssentialKitchen/2/
-
 [Keyset_fmsguide]
 ; long time good site
 begin=USK@xedmmitRTj9-PXJxoPbD7RY1gf9pKi0OcsRmjNPPIU4,AzFWTYV~9-I~eXis14tIkJ4XkF17gIgZrB294LjFXjc,AQACAAE/fmsguide/6/
@@ -170,3 +174,15 @@ begin=USK@xedmmitRTj9-PXJxoPbD7RY1gf9pKi0OcsRmjNPPIU4,AzFWTYV~9-I~eXis14tIkJ4XkF
 [Keyset_feral]
 ; long time good site
 begin=USK@-bk9znYylSCOEDuSWAvo5m72nUeMxKkDmH3nIqAeI-0,qfu5H3FZsZ-5rfNBY-jQHS5Ke7AT2PtJWd13IrPZjcg,AQACAAE/feral_codewright/28/
+
+[Keyset_seeker]
+; long time good site
+begin=USK@cI~w2hrvvyUa1E6PhJ9j5cCoG1xmxSooi7Nez4V2Gd4,A3ArC3rrJBHgAJV~LlwY9kgxM8kUR2pVYXbhGFtid78,AQACAAE/flog/24/
+
+[Keyset_drakrss]
+; long time good site
+begin=USK@KEs1hmyNBsiN0snDXqDlphPLfQceVpxd3-cQtPOO8wM,il~HAeEpxQpoCxvrLhBH-fvLnx9feAs~j3zo1VMLCS4,AQACAAE/draksites/732/
+
+[Keyset_heartbleed]
+; essential information
+begin=USK@008hTMgO3-Pg2P4NXEW2bueogtN2rPshNrs2eDDZD8E,sh-qCtrd~bXF3o4q-C5Juiw8TBfOhBfY9k4rLZmTrPQ,AQACAAE/heartbleed-bug/0/
