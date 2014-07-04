@@ -35,23 +35,26 @@
 bindTo=127.0.0.1
 port=1400
 allowedHosts=127.0.0.1
-keysets=nerd,xkcd,social,heartbleed,feral,toadflog,fetchpull,tech,death,seeker,denissalem,scheme,dragonwisdom,drakrss,file,flip,fmsguide,fnfs,freemail,freesite,freesitehowto,gpl,heal,hgvsgit,irc,kubuntu,publish,stats,saces,bombe,sone,xor,jsite,bloc,freenetfunding1,freenetfunding2,freenetfunding3
+keysets=nerd,xkcd,social,heartbleed,feral,toadflog,fetchpull,tech,death,seeker,denissalem,scheme,dragonwisdom,drakrss,file,flip,fmsguide,fnfs,freemail,freesite,freesitehowto,gpl,heal,hgvsgit,irc,kubuntu,publish,stats,saces,bombe,sone,xor,jsite,bloc,freenetfunding1,freenetfunding2,fixlinklength,jammingxkeyscore,ircssk
 enabled=true
-serverpath=https://d6.or.gs/freenet
+serverpath=https://d6.gnutella2.info/freenet
 ; serverpath=http://d6.or.gs/freenet
 
 
 [Keyset_gpl]
 strict=KSK@gpl.txt
 
+[Keyset_jammingxkeyscore]
+begin=USK@3byFQBKaPi-DSdQ6-fHDUEbBjg06coQveZwdHJGD7s8,rQKQseO8PcXwX-mO8XOg4FAwAoQ10hTWLkwTFewVRtQ,AQACAAE/jamming-xkeyscore/0/
+
 [Keyset_freenetfunding1]
 strict=CHK@BSlk9GPUCjylGSLrhMNqHtea3NBHl3IAOEgpM10iFEo,Oww8F~-MEInKwFGKzpgMaz~75d6S1XO-GTpJG2JJz0s,AAMC--8
 
 [Keyset_freenetfunding2]
-strict=CHK@AL-ein~cr5QgS2fFV-C3Aoq2y-Lfsi4TAzB9EvUgcgM,rMTvSXqQu70kcAlYqerQzgZ3Ketdw2KfSGmI-gc3IKM,AAMC--8
+begin=USK@s9sxY2cTJWHKRsTuBTkjrXW4HfzrdUlwFqft1mzV0Gs,2E4DOMYy-~zOdp8-5OQH2IcmLfey0AOIkms-73Mx2tI,AQACAAE/freenet-funding/1/
 
-[Keyset_freenetfunding3]
-strict=CHK@AL-ein~cr5QgS2fFV-C3Aoq2y-Lfsi4TAzB9EvUgcgM,rMTvSXqQu70kcAlYqerQzgZ3Ketdw2KfSGmI-gc3IKM,AAMC--8
+[Keyset_fixlinklength]
+begin=USK@ZLwcSLwqpM1527Tw1YmnSiXgzITU0neHQ11Cyl0iLmk,f6FLo3TvsEijIcJq-X3BTjjtm0ErVZwAPO7AUd9V7lY,AQACAAE/fix-link-length/1/
 
 [Keyset_toadflog]
 ; edition numbers are ignored
@@ -122,6 +125,10 @@ begin=USK@U2Ae~8MLcFw39u9CSzjm6HwO8NNsufS~Kb5pJOmsI2Y,KtlCou7~kS6hmkA2hLHbRt1Q-6
 [Keyset_irc]
 ; long time good site
 begin=USK@Dtz9FjDPmOxiT54Wjt7JwMJKWaqSOS-UGw4miINEvtg,cuIx2THw7G7cVyh9PuvNiHa1e9BvNmmfTcbQ7llXh2Q,AQACAAE/irclogs/907/
+
+[Keyset_ircssk]
+; long time good site
+derived=SSK@Dtz9FjDPmOxiT54Wjt7JwMJKWaqSOS-UGw4miINEvtg,cuIx2THw7G7cVyh9PuvNiHa1e9BvNmmfTcbQ7llXh2Q,AQACAAE/
 
 [Keyset_heal]
 ; long time good site
