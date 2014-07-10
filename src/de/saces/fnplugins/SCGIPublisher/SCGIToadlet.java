@@ -87,7 +87,7 @@ public class SCGIToadlet extends WebInterfaceToadlet {
 
 		String s = "<error>";
 		try {
-			s = FileUtil.readUTF(conf);
+			s = FileUtil.readUTF(conf).toString();
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
