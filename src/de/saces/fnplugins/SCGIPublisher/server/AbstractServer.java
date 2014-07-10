@@ -12,7 +12,6 @@ import freenet.io.NetworkInterface;
 import freenet.io.SSLNetworkInterface;
 import freenet.support.Executor;
 import freenet.support.Logger;
-import freenet.support.OOMHandler;
 import freenet.support.io.Closer;
 
 public abstract class AbstractServer implements Runnable {
@@ -46,10 +45,6 @@ public abstract class AbstractServer implements Runnable {
 			if(logMINOR) Logger.minor(this, "Handling connection");
 			try {
 				getService().handle(sock);
-			} catch (OutOfMemoryError e) {
-				OOMHandler.handleOOM(e);
-				System.err.println(serverName+" request above failed.");
-				Logger.error(this, "OOM in SocketHandler");
 			} catch (Throwable t) {
 				System.err.println("Caught in "+serverName+": "+t);
 				t.printStackTrace();
