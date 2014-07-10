@@ -336,9 +336,11 @@ public class SCGIServer extends AbstractServer implements AbstractService {
 			body.append(errorText);
 			body.append("</p><p>");
 		}
-		body.append("This is a restricted gate into Freenet. You can only request the URIs listed below. All the content you can access belongs only to its creators. We only take responsibility in so far that we ensured that no URI listed here contained any illegal material when we checked it. Should you find illegal on any site you can access via this proxy, please notify us instantly so we can remove the URI from our whitelist!");
+		body.append("<h1>Freenet Outproxy</h1>This is a restricted gate into Freenet. You can only request the URIs listed below. All the content you can access belongs only to its creators. We only take responsibility in so far that we ensured that no URI listed here contained any illegal material when we checked it. Should you find illegal on any site you can access via this proxy, please notify us instantly so we can remove the URI from our whitelist!");
 		body.append("</p><p>");
 		body.append("To get access to all content, install <a href=\"http://freenetproject.org\">Freenet</a> and request the Freenet URIs on your own node without the limits here.");
+		body.append("</p><p>");
+		body.append("This proxy is created by the <a href=\"https://github.com/ArneBab/SCGIPublisher/\">SCGIPublisher-plugin</a> with lighttpd as described in the Readme of the plugin. It runs on a small homeserver, so please do not clobber it too much. You cannot hurt Freenet by hurting my poor little server, but for sure a bunny will cry :).");
 		body.append("</p><p>Allowed Freenet URIs (whitelist):<ul>");
 
 		for (Filter filter: filters) {
