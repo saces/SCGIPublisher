@@ -159,6 +159,10 @@ public class SCGIServer extends AbstractServer implements AbstractService {
 		}
 
 		String path = env.get("PATH_INFO");
+		if (path == null) {
+			makePage(out, "Server configuration error", "This server is not properly configured. See readme for details!");
+			return;
+		}
 		if ((path.length() == 0) || ("/".equals(path))) {
 			welcomePage(out);
 			return;
