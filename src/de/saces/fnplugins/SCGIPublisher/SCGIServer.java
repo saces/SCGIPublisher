@@ -136,11 +136,26 @@ public class SCGIServer extends AbstractServer implements AbstractService {
 	}
 
 	public void handle(Socket socket) throws IOException {
-		System.out.println("Handel socke");
+		if (logMINOR) {
+			Logger.minor(this, "Handel socke");
+		}
 		BufferedInputStream in = new BufferedInputStream(socket.getInputStream(), 4096);
 		OutputStream out = socket.getOutputStream();
 
 		HashMap<String, String> env = SCGI.parse(in);
+
+		if (logDEBUG) {
+			StringBuilder b = new StringBuilder(100);
+			b.append("Got SCGI resquest: \n");
+			for (String key : env.keySet()) {
+				b.append(key);
+				b.append(": ");
+				b.append(env.get(key));
+				b.append('\n');
+			}
+			Logger.debug(this, b.toString());
+		}
+
 		int length = Integer.parseInt(env.get("CONTENT_LENGTH"));
 		if (length > 0)
 			FileUtil.skipFully(in, length);
