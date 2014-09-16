@@ -141,12 +141,3 @@ If you want to make your gateway more useful with little effort, you can reuse S
         scgi_pass localhost:1400;
     }
 
-Currently here are some issues, nginx works basically, but the redirect (302 response) didnotworkforme™. Needs more investigation.
-
-
-## Known issues with clients
-
-### Links
-
-I tried an USK without trailing slash after the edition number. What the heck does happens here? Can someone explain?
-
