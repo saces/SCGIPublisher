@@ -4,6 +4,8 @@
 package de.saces.fnplugins.SCGIPublisher;
 
 import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
@@ -16,7 +18,6 @@ import java.util.Vector;
 
 import de.saces.fnplugins.SCGIPublisher.server.AbstractServer;
 import de.saces.fnplugins.SCGIPublisher.server.AbstractService;
-
 import freenet.client.FetchException;
 import freenet.client.FetchResult;
 import freenet.client.HighLevelSimpleClient;
@@ -49,6 +50,8 @@ public class SCGIServer extends AbstractServer implements AbstractService {
 	private final Vector<Filter> filters;
 
 	private final BucketFactory bucketFactory;
+
+	private PageMaker pageMaker;
 
 	private String mServerPath;
 
@@ -102,6 +105,149 @@ public class SCGIServer extends AbstractServer implements AbstractService {
 		}
 	}
 
+	private class PageMaker {
+		private final boolean initOK;
+		private final String pageHeader;
+		private final String pageBody;
+		private final String pageFooter;
+
+		public PageMaker(String filename) {
+			if (filename == null || filename.isEmpty()) {
+				initOK = false;
+				pageHeader = null;
+				pageBody = null;
+				pageFooter = null;
+				return;
+			}
+			String s;
+			try {
+				s = FileUtil.readUTF(new File(filename)).toString();
+			} catch (FileNotFoundException e) {
+				Logger.error(this, "Template file '" + filename + "' not found.", e);
+				initOK = false;
+				pageHeader = null;
+				pageBody = null;
+				pageFooter = null;
+				return;
+			} catch (IOException e) {
+				Logger.error(this, "Error while reading template file '" + filename + "'.", e);
+				initOK = false;
+				pageHeader = null;
+				pageBody = null;
+				pageFooter = null;
+				return;
+			}
+			String[] sa = s.split("<!-- ERROR_MESSAGE -->", 2);
+			pageHeader = sa[0];
+			s = sa[1];
+			sa = s.split("<!-- KEY_LIST -->", 2);
+			pageBody = sa[0];
+			pageFooter = sa[1];
+			initOK = true;
+		}
+
+		private void makeURIList(StringBuilder sb, HashMap<String, String> env) {
+			for (Filter filter: filters) {
+				if (filter instanceof StrictFilter) {
+					sb.append("<li><a href=\"");
+					getServerPath(env, sb);
+					sb.append(((StrictFilter) filter).strictURI.toString(false, true));
+					sb.append("\">");
+					sb.append(((StrictFilter) filter).strictURI.toString(false, false));
+					sb.append("</a></li>\n");
+				}
+				if (filter instanceof BeginFilter) {
+					sb.append("<li>URIs that begin with ");
+					sb.append("<a href=\"");
+					getServerPath(env, sb);
+					sb.append(((BeginFilter) filter).beginURI.toString(false, true));
+					sb.append("\">");
+					sb.append(((BeginFilter) filter).beginURI.toString(false, false));
+					sb.append("</a></li>\n");
+				}
+				if (filter instanceof DerivedFilter) {
+					sb.append("<li>URIs which are derived from ");
+					sb.append(((DerivedFilter) filter).derivedURI.toString(false, false));
+					sb.append("</li>\n");
+				}
+			}
+		}
+
+		private void makeInternalPage(OutputStream out, String errorTitle, String errorText, HashMap<String, String> env) throws IOException {
+			StringBuilder header = new StringBuilder(256);
+			header.append("Status: 200 OK");
+			header.append("\r\n");
+			header.append("Content-Type: text/html");
+			header.append("\r\n");
+			header.append("\r\n");
+			out.write(header.toString().getBytes("US-ASCII"));
+			StringBuilder body = new StringBuilder(4096);
+			body.append("<html><head><title>Freenet Gateway</title></head><body>");
+			body.append("<h3>");
+			if (errorTitle != null)
+				body.append(errorTitle);
+			else
+				body.append("Freenet gateway");
+			body.append("</h3><p>");
+			if (errorText != null) {
+				body.append(errorText);
+				body.append("</p><p>");
+			}
+			body.append("This is a restricted gate into Freenet. You can only request the Freenet URIs listed below.");
+			body.append("</p><p>");
+			body.append("To get the full satisfaction install <a href=\"http://freenetproject.org\">Freenet</a> and request the Freenet URIs on your own node without the limits here.");
+			body.append("</p><p>");
+			body.append("This proxy is created by the <a href=\"https://github.com/saces/SCGIPublisher/\">SCGIPublisher-plugin</a>.");
+			body.append("</p><p>Allowed Freenet URIs:<ul>\n");
+
+			makeURIList(body, env);
+
+			body.append("</ul></p>");
+			body.append("</body></html>");
+			out.write(body.toString().getBytes("UTF-8"));
+		}
+
+		private void makeTemplatePage(OutputStream out, String errorTitle, String errorText, HashMap<String, String> env) throws IOException {
+			StringBuilder header = new StringBuilder(256);
+			header.append("Status: 200 OK");
+			header.append("\r\n");
+			header.append("Content-Type: text/html");
+			header.append("\r\n");
+			header.append("\r\n");
+			out.write(header.toString().getBytes("US-ASCII"));
+
+			StringBuilder html = new StringBuilder(4096);
+			html.append(pageHeader);
+			
+			if (errorTitle != null) {
+				html.append(errorTitle);
+			}
+			if (errorText != null) {
+				html.append(errorText);
+			}
+
+			html.append(pageBody);
+
+			html.append("<ul>\n");
+
+			makeURIList(html, env);
+
+			html.append("</ul>\n");
+
+			html.append(pageFooter);
+			out.write(html.toString().getBytes("UTF-8"));
+		}
+
+		private void makePage(OutputStream out, String errorTitle, String errorText, HashMap<String, String> env) throws IOException {
+			if (initOK) {
+				makeTemplatePage(out, errorTitle, errorText, env);
+			} else {
+				makeInternalPage(out, errorTitle, errorText, env);
+			}
+		}
+
+	}
+
 	public SCGIServer(HighLevelSimpleClient client, Executor executor, BucketFactory bf) {
 		super("SCGIServer", executor);
 		hlsc = client;
@@ -113,6 +259,10 @@ public class SCGIServer extends AbstractServer implements AbstractService {
 		if (isRunning())
 			throw new IllegalStateException("you cant set serverpath on a running server.");
 		mServerPath = serverpath;
+	}
+
+	public void setFrontPage(String frontpage) {
+		pageMaker = new PageMaker(frontpage);
 	}
 
 	public void addStrictFilter(FreenetURI uri) {
@@ -175,7 +325,7 @@ public class SCGIServer extends AbstractServer implements AbstractService {
 
 		String path = env.get("PATH_INFO");
 		if (path == null) {
-			makePage(out, "Server configuration error", "This server is not properly configured. See readme for details!", env);
+			pageMaker.makePage(out, "Server configuration error", "This server is not properly configured. See readme for details!", env);
 			return;
 		}
 		if ((path.length() == 0) || ("/".equals(path))) {
@@ -287,8 +437,9 @@ public class SCGIServer extends AbstractServer implements AbstractService {
 	}
 
 	private String getServerPath(HashMap<String, String> env) {
-		if (mServerPath != null)
+		if (mServerPath != null) {
 			return mServerPath;
+		}
 		StringBuilder sb = new StringBuilder();
 		uriMaker(env, sb);
 		return sb.toString();
@@ -322,81 +473,27 @@ public class SCGIServer extends AbstractServer implements AbstractService {
 	}
 
 	private void errorPage(OutputStream out, Exception e, HashMap<String, String> env) throws IOException {
-		makePage(out, "Error while prcessing", "An Error occured while fullfilling your request: "+e.getLocalizedMessage(), env);
+		pageMaker.makePage(out, "Error while prcessing", "An Error occured while fullfilling your request: "+e.getLocalizedMessage(), env);
 	}
 
 	
 	private void invalidURIPage(OutputStream out, Exception e, HashMap<String, String> env) throws IOException {
-		makePage(out, "Not a valid Freenet URI", "The path you requested is not a valid Freenet URI: "+e.getLocalizedMessage(), env);
+		pageMaker.makePage(out, "Not a valid Freenet URI", "The path you requested is not a valid Freenet URI: "+e.getLocalizedMessage(), env);
 	}
 
 	private void fetchErrorPage(OutputStream out, FetchException e, HashMap<String, String> env) throws IOException {
-		makePage(out, "Error while fetching from Freenet", "An Error occured while fetching the Freenet URI you requested from Freenet network: ("+e.mode+") "+e.getLocalizedMessage(), env);
+		pageMaker.makePage(out, "Error while fetching from Freenet", "An Error occured while fetching the Freenet URI you requested from Freenet network: ("+e.mode+") "+e.getLocalizedMessage(), env);
 	}
 
 	
 	private void notWhiteListedPage(OutputStream out, HashMap<String, String> env) throws IOException {
-		makePage(out, "Not an allowed Freenet URI", "The Freenet URI you requested is not white listed!", env);
+		pageMaker.makePage(out, "Not an allowed Freenet URI", "The Freenet URI you requested is not white listed!", env);
 	}
 
 	private void welcomePage(OutputStream out, HashMap<String, String> env) throws IOException {
-		makePage(out, null, null, env);
+		pageMaker.makePage(out, null, null, env);
 	}
 
-	private void makePage(OutputStream out, String errorTitle, String errorText, HashMap<String, String> env) throws IOException {
-		StringBuilder header = new StringBuilder(256);
-		header.append("Status: 200 OK");
-		header.append("\r\n");
-		header.append("Content-Type: text/html");
-		header.append("\r\n");
-		header.append("\r\n");
-		out.write(header.toString().getBytes("US-ASCII"));
-		StringBuilder body = new StringBuilder(4096);
-		body.append("<html><head><title>Freenet Gateway</title></head><body>");
-		body.append("<h3>");
-		if (errorTitle != null)
-			body.append(errorTitle);
-		else
-			body.append("Freenet gateway");
-		body.append("</h3><p>");
-		if (errorText != null) {
-			body.append(errorText);
-			body.append("</p><p>");
-		}
-		body.append("<h1>Freenet Inproxy</h1>This is a restricted gate into Freenet. You can only request the URIs listed below. All the content you can access belongs only to its creators. We only take responsibility in so far that we ensured that no URI listed here contained any illegal material when we checked it. Should you find illegal on any site you can access via this proxy, please notify us instantly so we can remove the URI from our whitelist!");
-		body.append("</p><p>");
-		body.append("To get access to all content, install <a href=\"http://freenetproject.org\">Freenet</a> and request the Freenet URIs on your own node without the limits here.");
-		body.append("</p><p>");
-		body.append("This proxy is created by the <a href=\"https://github.com/ArneBab/SCGIPublisher/\">SCGIPublisher-plugin</a> with lighttpd as described in the Readme of the plugin. It runs on a small homeserver, so please do not clobber it too much. You cannot hurt Freenet by hurting my poor little server, but for sure a bunny will cry :).");
-		body.append("</p><p>Allowed Freenet URIs (whitelist):<ul>\n");
 
-		for (Filter filter: filters) {
-			if (filter instanceof StrictFilter) {
-				body.append("<li><a href=\"");
-				getServerPath(env, body);
-				body.append(((StrictFilter) filter).strictURI.toString(false, true));
-				body.append("\">");
-				body.append(((StrictFilter) filter).strictURI.toString(false, false));
-				body.append("</a></li>\n");
-			}
-			if (filter instanceof BeginFilter) {
-				body.append("<li>URIs that begin with ");
-				body.append("<a href=\"");
-				getServerPath(env, body);
-				body.append(((BeginFilter) filter).beginURI.toString(false, true));
-				body.append("\">");
-				body.append(((BeginFilter) filter).beginURI.toString(false, false));
-				body.append("</a></li>\n");
-			}
-			if (filter instanceof DerivedFilter) {
-				body.append("<li>URIs which are derived from ");
-				body.append(((DerivedFilter) filter).derivedURI.toString(false, false));
-				body.append("</li>\n");
-			}
-		}
 
-		body.append("</ul></p>");
-		body.append("</body></html>");
-		out.write(body.toString().getBytes("UTF-8"));
-	}
 }

@@ -197,11 +197,13 @@ public class SCGIPublisher implements FredPlugin, FredPluginL10n, FredPluginThre
 		int port = conf.getValueAsInt(section, "port", -1);
 		String[] keySets = conf.getValueAsString(section, "keysets").split(",");
 		String serverpath = conf.getValueAsString(section, "serverpath");
+		String frontpage = conf.getValueAsString(section, "frontpage");
 
 		SCGIServer server = new SCGIServer(pluginContext.hlsc, pluginContext.clientCore.getExecutor(), pluginContext.clientCore.tempBucketFactory);
 		servers.add(server);
 		server.setAdress(host, port, allowed, false);
 		server.setServerpath(serverpath);
+		server.setFrontPage(frontpage);
 
 		boolean error = false;
 		for (String keyset: keySets) {
