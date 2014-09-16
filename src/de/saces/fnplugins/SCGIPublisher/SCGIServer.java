@@ -175,11 +175,11 @@ public class SCGIServer extends AbstractServer implements AbstractService {
 
 		String path = env.get("PATH_INFO");
 		if (path == null) {
-			makePage(out, "Server configuration error", "This server is not properly configured. See readme for details!");
+			makePage(out, "Server configuration error", "This server is not properly configured. See readme for details!", env);
 			return;
 		}
 		if ((path.length() == 0) || ("/".equals(path))) {
-			welcomePage(out);
+			welcomePage(out, env);
 			return;
 		}
 		path = path.substring(1);
@@ -206,12 +206,12 @@ public class SCGIServer extends AbstractServer implements AbstractService {
 			furi = new FreenetURI(path);
 		} catch (MalformedURLException e) {
 			Logger.debug(this, "Malformet key", e);
-			invalidURIPage(out, e);
+			invalidURIPage(out, e, env);
 			return;
 		}
 
 		if (!isWhiteListed(furi)) {
-			notWhiteListedPage(out);
+			notWhiteListedPage(out, env);
 			return;
 		}
 
@@ -225,7 +225,7 @@ public class SCGIServer extends AbstractServer implements AbstractService {
 				buf.append("Status: 301 Moved Permanently");
 				buf.append("\r\n");
 				buf.append("Location: ");
-				uriMaker(env, buf);
+				getServerPath(env, buf);
 				buf.append(e.newURI.toString(false, true));
 				buf.append("\r\n");
 				buf.append("\r\n");
@@ -234,7 +234,7 @@ public class SCGIServer extends AbstractServer implements AbstractService {
 			}
 
 			Logger.debug(this, "Fetch error: "+e.getLocalizedMessage() + " "+((e.newURI == null)?"<null>": e.newURI.toString(false, false)), e);
-			fetchErrorPage(out, e);
+			fetchErrorPage(out, e, env);
 			return;
 		}
 
@@ -245,7 +245,7 @@ public class SCGIServer extends AbstractServer implements AbstractService {
 			//baseURI = new URI("/blahblub");
 		} catch (URISyntaxException e) {
 			if (logDEBUG) Logger.debug(this, "Error: "+e.getLocalizedMessage(), e);
-			errorPage(out, e);
+			errorPage(out, e, env);
 			return;
 		}
 
@@ -294,6 +294,14 @@ public class SCGIServer extends AbstractServer implements AbstractService {
 		return sb.toString();
 	}
 
+	private void getServerPath(HashMap<String, String> env, StringBuilder sb) {
+		if (mServerPath != null) {
+			sb.append(mServerPath);
+			return;
+		}
+		uriMaker(env, sb);
+	}
+
 	private void uriMaker(HashMap<String, String> env, StringBuilder sb) {
 		sb.append("http");
 		if ("on".equals(env.get("HTTPS")))
@@ -313,29 +321,29 @@ public class SCGIServer extends AbstractServer implements AbstractService {
 		return false;
 	}
 
-	private void errorPage(OutputStream out, Exception e) throws IOException {
-		makePage(out, "Error while prcessing", "An Error occured while fullfilling your request: "+e.getLocalizedMessage());
+	private void errorPage(OutputStream out, Exception e, HashMap<String, String> env) throws IOException {
+		makePage(out, "Error while prcessing", "An Error occured while fullfilling your request: "+e.getLocalizedMessage(), env);
 	}
 
 	
-	private void invalidURIPage(OutputStream out, Exception e) throws IOException {
-		makePage(out, "Not a valid Freenet URI", "The path you requested is not a valid Freenet URI: "+e.getLocalizedMessage());
+	private void invalidURIPage(OutputStream out, Exception e, HashMap<String, String> env) throws IOException {
+		makePage(out, "Not a valid Freenet URI", "The path you requested is not a valid Freenet URI: "+e.getLocalizedMessage(), env);
 	}
 
-	private void fetchErrorPage(OutputStream out, FetchException e) throws IOException {
-		makePage(out, "Error while fetching from Freenet", "An Error occured while fetching the Freenet URI you requested from Freenet network: ("+e.mode+") "+e.getLocalizedMessage());
+	private void fetchErrorPage(OutputStream out, FetchException e, HashMap<String, String> env) throws IOException {
+		makePage(out, "Error while fetching from Freenet", "An Error occured while fetching the Freenet URI you requested from Freenet network: ("+e.mode+") "+e.getLocalizedMessage(), env);
 	}
 
 	
-	private void notWhiteListedPage(OutputStream out) throws IOException {
-		makePage(out, "Not an allowed Freenet URI", "The Freenet URI you requested is not white listed!");
+	private void notWhiteListedPage(OutputStream out, HashMap<String, String> env) throws IOException {
+		makePage(out, "Not an allowed Freenet URI", "The Freenet URI you requested is not white listed!", env);
 	}
 
-	private void welcomePage(OutputStream out) throws IOException {
-		makePage(out, null, null);
+	private void welcomePage(OutputStream out, HashMap<String, String> env) throws IOException {
+		makePage(out, null, null, env);
 	}
 
-	private void makePage(OutputStream out, String errorTitle, String errorText) throws IOException {
+	private void makePage(OutputStream out, String errorTitle, String errorText, HashMap<String, String> env) throws IOException {
 		StringBuilder header = new StringBuilder(256);
 		header.append("Status: 200 OK");
 		header.append("\r\n");
@@ -360,28 +368,30 @@ public class SCGIServer extends AbstractServer implements AbstractService {
 		body.append("To get access to all content, install <a href=\"http://freenetproject.org\">Freenet</a> and request the Freenet URIs on your own node without the limits here.");
 		body.append("</p><p>");
 		body.append("This proxy is created by the <a href=\"https://github.com/ArneBab/SCGIPublisher/\">SCGIPublisher-plugin</a> with lighttpd as described in the Readme of the plugin. It runs on a small homeserver, so please do not clobber it too much. You cannot hurt Freenet by hurting my poor little server, but for sure a bunny will cry :).");
-		body.append("</p><p>Allowed Freenet URIs (whitelist):<ul>");
+		body.append("</p><p>Allowed Freenet URIs (whitelist):<ul>\n");
 
 		for (Filter filter: filters) {
 			if (filter instanceof StrictFilter) {
 				body.append("<li><a href=\"");
-				body.append(((StrictFilter) filter).strictURI.toString(false, false));
+				getServerPath(env, body);
+				body.append(((StrictFilter) filter).strictURI.toString(false, true));
 				body.append("\">");
 				body.append(((StrictFilter) filter).strictURI.toString(false, false));
-				body.append("</a></li>");
+				body.append("</a></li>\n");
 			}
 			if (filter instanceof BeginFilter) {
 				body.append("<li>URIs that begin with ");
 				body.append("<a href=\"");
-				body.append(((BeginFilter) filter).beginURI.toString(false, false));
+				getServerPath(env, body);
+				body.append(((BeginFilter) filter).beginURI.toString(false, true));
 				body.append("\">");
 				body.append(((BeginFilter) filter).beginURI.toString(false, false));
-				body.append("</a></li>");
+				body.append("</a></li>\n");
 			}
 			if (filter instanceof DerivedFilter) {
 				body.append("<li>URIs which are derived from ");
 				body.append(((DerivedFilter) filter).derivedURI.toString(false, false));
-				body.append("</li>");
+				body.append("</li>\n");
 			}
 		}
 
