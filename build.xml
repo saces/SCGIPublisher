@@ -125,11 +125,17 @@
 				<attribute name="Plugin-Main-Class" value="de.saces.fnplugins.SCGIPublisher.SCGIPublisher"/>
 			</manifest>
 			<fileset dir="src/" casesensitive="no">
-				<include name="*.txt"/>
+				<include name="*.md"/>
 			</fileset>
 			<fileset dir="${build}/"/>
 			<fileset dir="." includes="SCGIPublisher.ini" />
 		</jar>
+		<zip destfile="${dist}/SCGIPublisher-src.zip" filesonly="true" compress="true">
+        <zipfileset dir="."
+                prefix = ""
+                excludes=".*"
+                includes="src/**/* build.xml README.md"/>
+        </zip>
 	</target>
 
 	<!-- ================================================== -->
