@@ -370,7 +370,7 @@ public class SCGIServer extends AbstractServer implements AbstractService {
 			fr = hlsc.fetch(furi);
 		} catch (FetchException e) {
 			Logger.debug(this, "Fetch error: "+e.getLocalizedMessage(), e);
-			if (e.mode == FetchException.PERMANENT_REDIRECT || e.mode == FetchException.NOT_ENOUGH_PATH_COMPONENTS) {
+			if (e.mode == FetchException.FetchExceptionMode.PERMANENT_REDIRECT || e.mode == FetchException.FetchExceptionMode.NOT_ENOUGH_PATH_COMPONENTS) {
 				StringBuilder buf = new StringBuilder(1024);
 				buf.append("Status: 301 Moved Permanently");
 				buf.append("\r\n");
